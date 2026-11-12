@@ -117,7 +117,7 @@ footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
   <thead><tr><th></th><th>Claude Code + Claude</th><th>opencode + local Qwen</th></tr></thead>
   <tbody>
     <tr><td>Cost</td><td>Claude Pro, $20/month</td><td>Free</td></tr>
-    <tr><td>Your files</td><td>Sent to Anthropic</td><td>Stay on your computer</td></tr>
+    <tr><td>Your files</td><td>What Claude reads is sent to Anthropic</td><td>Stay on your computer</td></tr>
     <tr><td>Internet</td><td>Required</td><td>Not needed after download</td></tr>
     <tr><td>Quality</td><td>Handles multi-step projects well</td><td>Fine for small changes; struggles with large or multi-file work</td></tr>
     <tr><td>Speed</td><td>Fast</td><td>Depends on your computer; often slow</td></tr>
@@ -133,13 +133,13 @@ footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
 <table>
   <thead><tr><th>Memory</th><th>Model</th><th>Download</th><th>What to expect</th></tr></thead>
   <tbody>
-    <tr><td>8 GB</td><td><code>qwen3:4b</code></td><td>2.5 GB</td><td>Runs, slowly. Fine for seeing how it works.</td></tr>
-    <tr><td>16 GB</td><td><code>qwen3:4b</code></td><td>2.5 GB</td><td>Usable for small edits.</td></tr>
-    <tr><td>32 GB or more</td><td><code>qwen3-coder:30b</code></td><td>19 GB</td><td>A coding model. Noticeably better, still well behind Claude.</td></tr>
+    <tr><td>8 GB</td><td>none</td><td>–</td><td>Too little memory for a model at the context opencode needs. Use Claude Code; skip steps 5, 6 and 8.</td></tr>
+    <tr><td>16–32 GB</td><td><code>qwen3:4b</code></td><td>2.5 GB</td><td>Uses about 9 GB while running. Usable for small edits; close other apps first.</td></tr>
+    <tr><td>48 GB or more</td><td><code>qwen3-coder:30b</code></td><td>19 GB</td><td>A coding model, about 25 GB while running. Noticeably better, still well behind Claude.</td></tr>
   </tbody>
 </table>
 </div>
-<p>You also need about 10 GB of free disk (25 GB for the larger model). Claude Code itself needs only 4 GB of memory.</p>
+<p>Why so much memory for a 2.5 GB download? opencode needs the model to hold 64k tokens of context (about 50,000 words) at once, and that working memory costs several GB on top of the model. You also need about 10 GB of free disk (25 GB for the larger model). Claude Code itself needs only 4 GB of memory.</p>
 
 <h2 id="terminal">3. Open a terminal</h2>
 <p>A terminal is a window where you type commands instead of clicking. Every grey box on this page is a command: press <strong>Copy</strong>, paste it into the terminal, press <strong>Enter</strong>, and wait until it finishes.</p>
@@ -154,12 +154,12 @@ footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
 <p class="win-only">Optional but recommended on Windows: install <a href="https://git-scm.com/downloads/win">Git for Windows</a>, which gives Claude Code a better shell.</p>
 <p>Close the terminal, open a new one, and check it:</p>
 <div class="cmd"><pre>claude --version</pre></div>
-<div class="ok"><strong>Worked if</strong> it prints a version number. The first time you run <code>claude</code>, it opens your browser to log in.</div>
+<div class="ok"><strong>Worked if</strong> it prints a version number.</div>
+<p>Now log in once, so it's ready: run <code>claude</code>, follow the login in your browser, then type <code>/exit</code>.</p>
+<div class="cmd"><pre>claude</pre></div>
 
 <h2 id="ollama">5. Install Ollama and a model</h2>
-<p>Download Ollama from <a href="https://ollama.com/download">ollama.com/download</a>, open the installer, and follow it. Or install from the terminal:</p>
-<div class="cmd mac-only"><pre>curl -fsSL https://ollama.com/install.sh | sh</pre></div>
-<div class="cmd win-only"><pre>irm https://ollama.com/install.ps1 | iex</pre></div>
+<p>Download the Ollama app from <a href="https://ollama.com/download">ollama.com/download</a>, open the installer, and follow it. Use the app rather than a terminal install: the setting you need below lives in the app.</p>
 <p>Download the model for your memory (see step 2):</p>
 <div class="cmd"><pre>ollama pull qwen3:4b</pre></div>
 <p>or, with 32 GB or more:</p>
@@ -186,6 +186,7 @@ claude</pre></div>
   <li><code>Explain in three plain sentences what files you made and what each one does.</code></li>
   <li><code>Put this project under git and commit it with the message "first version".</code></li>
 </ol>
+<p class="mac-only">At prompt 5, your Mac may offer to install "command line developer tools". Say yes: they're Apple's, take a few minutes, and include git, which saves versions of your project.</p>
 <p>Claude Code will ask before it creates files or runs commands. Read what it wants to do, then say yes. Press <strong>Esc</strong> to stop it. Press <strong>Esc</strong> twice to go back to an earlier point.</p>
 <p>Ideas for your own: a personal page, a tracker for a habit, a recipe scaler, a small browser game, a tool that cleans up a spreadsheet you export as CSV. Start with a web page; you can see it, which makes checking easy.</p>
 
@@ -193,6 +194,7 @@ claude</pre></div>
 <p>From inside your project folder:</p>
 <div class="cmd"><pre>ollama launch opencode --model qwen3:4b</pre></div>
 <p>(Use the model you downloaded.) Inside opencode, <code>/models</code> lists the models it can use. Ask for one small change, such as <code>Change the title to "Almost there" and make the numbers green.</code></p>
+<p>Qwen3 often thinks out loud before it answers. That's normal, and part of why it's slow.</p>
 <div class="note"><strong>Expect</strong> it to be slower and to get more wrong than Claude. Small models do well with one clear change at a time and badly with "build me an app". That trade is the point: free and private, but weaker.</div>
 
 <h2 id="habits">9. Five habits</h2>
@@ -254,7 +256,13 @@ claude</pre></div>
     btn.addEventListener('click', function () {
       var text = box.querySelector('pre').innerText;
       var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
-      if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, function () { btn.textContent = 'Select it'; }); }
+      var fallback = function () {
+        var range = document.createRange(); range.selectNodeContents(box.querySelector('pre'));
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+        btn.textContent = ok ? 'Copied' : 'Press ⌘C'; setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+      };
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done, fallback); } else { fallback(); }
     });
     box.appendChild(btn);
   });
